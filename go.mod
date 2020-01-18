@@ -6,3 +6,5 @@ require (
 	golang.org/x/net v0.0.0-20191021144547-ec77196f6094 // indirect
 	gopkg.in/h2non/gentleman.v1 v1.0.4
 )
+
+go 1.13

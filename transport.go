@@ -44,10 +44,6 @@ func NewTransport() *Transport {
 // implement the http.RoundTripper interface.  You will not interact with this directly, instead
 // the *http.Client you are using will call it for you.
 func (m *Transport) RoundTrip(req *http.Request) (*http.Response, error) {
-	// Just act as a proxy if not intercepting
-	if !Intercepting() {
-		return m.Transport.RoundTrip(req)
-	}
 
 	m.mutex.Lock()
 	defer Clean()
