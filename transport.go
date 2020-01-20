@@ -44,6 +44,15 @@ func NewTransport() *Transport {
 // implement the http.RoundTripper interface.  You will not interact with this directly, instead
 // the *http.Client you are using will call it for you.
 func (m *Transport) RoundTrip(req *http.Request) (*http.Response, error) {
+	/*
+		BP-2275 Commenting this out as it does not support our use of gock as
+		the deferred transport when using with go-vcr.
+
+			// Just act as a proxy if not intercepting
+			if !Intercepting() {
+				return m.Transport.RoundTrip(req)
+			}
+	*/
 
 	m.mutex.Lock()
 	defer Clean()
@@ -90,8 +99,13 @@ func (m *Transport) RoundTrip(req *http.Request) (*http.Response, error) {
 func (m *Transport) CancelRequest(req *http.Request) {}
 
 func shouldUseNetwork(req *http.Request, mock Mock) bool {
-	if mock != nil && mock.Response().UseNetwork {
-		return true
+	if mock != nil {
+		if mock.Response().UseNetwork {
+			return true
+		} else {
+			// BP-2275 any matching mock should just be used, regardless of networking filters
+			return false
+		}
 	}
 	if !config.Networking {
 		return false
