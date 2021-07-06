@@ -22,7 +22,7 @@ To get started, take a look to the [examples](#examples).
 - Supports map and filters to handle mocks easily.
 - Wide compatible HTTP interceptor using `http.RoundTripper` interface.
 - Works with any `net/http` compatible client, such as [gentleman](https://github.com/h2non/gentleman).
-- Network delay simulation (beta).
+- Network timeout/cancelation delay simulation.
 - Extensible and hackable API.
 - Dependency free.
 
@@ -204,7 +204,7 @@ import (
   "testing"
 )
 
-func TestMatchHeaders(t *testing.T) {
+func TestMatchParams(t *testing.T) {
   defer gock.Off()
 
   gock.New("http://foo.com").
@@ -332,9 +332,6 @@ func main() {
   // Response body is the original
   body, _ := ioutil.ReadAll(res.Body)
   fmt.Printf("Body: %s", string(body))
-
-  // Verify that we don't have pending mocks
-  st.Expect(t, gock.IsDone(), true)
 }
 ```
 
